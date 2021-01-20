@@ -1,0 +1,45 @@
+modificar para simplificar la app en flutter 
+(porque teniendo varias screen estoy pensando que quizas es muy complicado, para mi, por ejemplo, el manejo de la "rutina" desde varias
+screens y del "timer" porque no se bien si es tan sencillo pasar el objeto directamente y no solo el valor del mismo, se puede usar
+"Provider" creo para eso, pero para simplificar si se hace en una sola screen queda mejor) 
+
+Tambien deberia ver el tema de "isolate" (para que se pueda procesar en paralelo Bluetooth y Timer, para que no haya retrasos en timer
+por ejemplo, y porque es necesario para que siga corriendo incluso con la app en segundo plano, creo)
+
+La modificacion para 1 sola screen seria eliminar el menú. Que aparezca una screen de configuracion de la rutina al iniciar y luego
+pasas a la screen principal que será la del TimerDisplay (con Pausa, Start, Stop.... el tema de ver si poner algo de 'ajustes' es lo
+unico que me traba, para por ej des/vincular el BT manualmente, aunque se podría cerrar/abrir la app en el peor de los casos, podria
+poner un SLIDING UP PANEL quizás tmb).
+
+Quedaría:
+	- Screen 1 (opcional) -> Variante del menú, algo tipo Swipe left/right para elegir entre "AMRAP", "Chipper", "CxT", "Combate" 
+				 (Ver Widget del Swip, con circulitos debajo)
+	- Screen 2 -> Configuracion de la rutina, según que opcion se haya elegido antes, mostrará diferentes configuraciones posibles
+		      (Time Work, Rest, Rounds, Sets, RestBtwnSets)
+	- Screen 3 -> Rutina Timer Display, la app quedara corriendo en esta screen todo el tiempo
+	- Screen 0 -> Debería ponerla para vincular inicialmente el Bluetooth (ver, si se puede hacer automatico, sabiendo el BT al que
+		      quiero conectar, aunque deberia preveer errores, de ultima que sea manual esto siempre al iniciar la app) 
+
+
+/********************************* UPDATE ************************************/
+Después de haber hecho un montón hasta V5 del apk (Explicado en Docummentation), concluí probando la app
+que en background (dsp de cierto tiempo fuera de la app, mata todos los procesos) no va a correr el timer (ni aunque use Isolate)
+Opciones:
+	- Se puede correr cosas en background, pero es muy complicado
+	  https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124
+
+- Lo otro que se me ocurre es que podría cambiar la APP para que no necesite correr en background
+  	Una forma podría ser directamente que la APP no corra el timer que sólo sea reemplazo del control remoto, permitiendo
+	PAUSE, START, RESUME, STOP, INCREMENT/DECREMENT ROUND & SET, +/- SEGUNDOS, etc
+	Además de permitir configurar la rutina de una manera mucho más amigable que con un 'control remoto', esto es, con las páginas
+	de configuración ya utilizadas.
+	DESVENTAJAS de hacer esto:
+		- la app no va a seguir el estado de la rutina (tiempo, y rounds/set actual) pero si tenemos
+		  en cuenta que inicialmente la idea era simplemente reemplazar el control remoto, digamos que estaba demás (estaba bueno, pero no era la idea inicial, lo hice de emoción)
+		- Además, si el Cronómetro se apagara, perdería el registro del estado de la rutina
+		  (que con la app lo recuperaba con la resincronización) pero, por otro lado, en realidad, eso de apagarse no debería
+		  pasa, osea sería una situación muy particular y que, de última debería ver qué hacer, como por ejemplo, directamente
+		  estar atentos al reloj y si vemos que se apaga, manualmente llevarlo al estado deseado (timeLeft, round, set y demás) (y el micro podría conservar el último estado en EEPROM)
+		  (el problema está en si nadie vió cuando se apagó el reloj y no sabemos cuánto tiempo estuvo apagado y cuál debería ser su estado actual)
+
+

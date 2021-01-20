@@ -1,0 +1,37 @@
+- Comunicación BT (sacarlo del ejemplo que ya tengo)
+	- isolate al BT o al Timer (para que no se trabe el programa al correr uno u otro) (ver si isolate timer no hace que siga corriendo al cerrar por completo la app, cosa q no queremos)
+- Splashscreen (aprox DONE)
+- LastSecondsAlarma (color en pantalla y ver sonido 3,2,1) (modificable según tipo de rutina: Box a los 10 segundos por ej)
+- initialPrepareTime (DONE)
+- Mejorar un toque más UI (aprox DONE) (posibles cosas en StopwatchView: Poner el Play/Pause dentro del timerDisplay, abajo dejar el 'Reset' con extendedFloatingButton, y en la esquina bottomLeft poner sound ON/OFF para la alarma de lastSeconds)
+
+V4 -> Le mejore UI, cambio para que en finished muestre las barras completas y no el Go!, Alarma sonora para lastSeconds, 
+Agregado de que el roundIncrement se observe en el display (el texto, no solo las barras que no se porque esas si andaban) para
+eso tuve que modificar RoundSetDisplay poniendolo como un método dentro de StopwatchView, para que pueda acceder a setState
+Además, modifique el TimerDisplayAnimated, lo pase a stateless, porque era full al pedo
+En la alarma sonora varía según sea combate o no (campana en vez de rest)
+
+- Agregado comunicación BT 
+	- Agregar verificacion de conexion BT y manejo de este error (reconectar y/o resincronizar timer BT)
+
+Agregué tema de chequear si está conectado antes de enviar (no se que tannn bien está resuelto, pero anda)
+Agregué popupmenu en la appbar, para "config BT" (desconexion y resincronización) siempre y cuando sea rutina con BT (falta poner detalles de que cuando desconecte mande isWithBT a false y giladas)
+ese PopUpMenu dispara un AlertDialog 
+Al agregar eso, modifiqué UI, sacando el FloatingButton de "Resincronize" para que la Screen del stopWatch quede igual tanto para rutina con BT como sin BT
+
+Modificado tambien tema de screen RoutinePLay, separé el widget de la screen BT_Conection para tener separadas esta y la del stopwatch
+
+Falta armar la "resincronización" y "reconexión" y algo que evalue si al intentar conectar no lo logra (timeout) que avise (y reintente o cancele)
+
+Tema resincronización y/o error al enviar un msj por desconexión temporal o completa del dispo BT, logré resolverla bastante,
+falta limpiar el código porque se complicó hasta que hice lo del Stream con device.state.listen y la función isConnected.
+Con eso quedó bastante bien, hay que acomodar todos los casos de comunicación y qué hacer con el cuadrod e diálogo y demás
+pero lo MAS IMPORTANTE, falta agregar que antes de resincronizar reenvíe el mensaje que no se pudo enviar en primera instancia
+porque sino sucede, por ejemplo, que la app queda en 'pausa' y el TimerBT NO, o viceversa (ver como solucionarlo) y ver de ultima
+la funcion resincronize si agregarlo que verifique si estaba en pause o no
+En el resincronize, directamente, hago un 'pause', siempre y cuando el timer esté 'started or resumed' (es el 'pause' del boton pero sin el envío del msj)
+
+Corrección del streamsubscription del state (connected...) que seguia corriendo al cambiar de screen, lo anulé con 'cancel' en el dispose del widget y en cambios de screen
+Cambios a castellano de textos, cambio del ícono de los ajustes bluetooth e incorporación de indicación por color del mismo si BT connected o disconnected
+
+V5 - Con lo anterior nombrado (BT y demas) y cambios de UI
