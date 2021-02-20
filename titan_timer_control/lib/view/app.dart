@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       title: "Titan Timer Control",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
+        primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: MODES_ROUTE,
