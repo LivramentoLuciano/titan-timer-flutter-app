@@ -33,25 +33,30 @@ class TimeSlider extends StatelessWidget {
     }
 
     return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text(_title, style: TextStyle(fontSize: 18)),
-          Text(mmss(_time), style: Theme.of(context).textTheme.headline4),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: Colors.grey[200],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(_title, style: TextStyle(fontSize: 18)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(mmss(_time), style: Theme.of(context).textTheme.headline4),
             ),
-            child: Slider(
-              min: 0,
-              max: 400,
-              value: _time.toDouble(),
-              onChanged: _handleNewValue,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: Colors.grey[200],
+              ),
+              child: Slider(
+                min: 0,
+                max: 400,
+                value: _time.toDouble(),
+                onChanged: _handleNewValue,
+              ),
             ),
-          ),
-          Divider(thickness: 1),
-        ],
+          ],
+        ),
       ),
     );
   }
