@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:titan_timer_control/constants.dart';
-import 'package:titan_timer_control/view/widgets/time_slider.dart';
+import 'package:titan_timer_control/view/widgets/routine_settings/reps_settings.dart';
+import 'package:titan_timer_control/view/widgets/routine_settings/time_settings.dart';
 
 class RoutineSettingsScreen extends StatelessWidget {
   @override
@@ -12,11 +13,27 @@ class RoutineSettingsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TimeSlider(name: "work"),
+            Divider(),
             TimeSlider(name: "rest"),
+            Divider(),
             TimeSlider(name: "rest-set"),
-            RaisedButton(
-              onPressed: () => Navigator.of(context).pushNamed(CONTROL_ROUTE),
-              child: Text("Sig"),
+            Divider(),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RepsSetter(name: "round"),
+                  RepsSetter(name: "set"),
+                ],
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: FlatButton(
+                onPressed: () => Navigator.of(context).pushNamed(CONTROL_ROUTE),
+                child: Text("Confirmar", style: TextStyle(fontSize: 18)),
+              ),
             )
           ],
         ),
