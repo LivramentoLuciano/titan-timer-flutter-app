@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class Routine with ChangeNotifier {
   num _tWork, _tRest, _tRestSets;
-  num _actualRound, _actualSet, _rounds, _sets;
+  num _rounds, _sets;
 
   Routine({tWork, tRest, tRestSets, rounds, sets})
-      : _actualRound = 1,
-        _actualSet = 1,
-        _tWork = tWork,
+      : _tWork = tWork,
         _tRest = tRest,
         _tRestSets = tRestSets;
 
@@ -40,40 +38,6 @@ class Routine with ChangeNotifier {
     _sets = s;
     notifyListeners();
   }
-
-  num get actualRound => _actualRound;
-  set actualRound(num r) {
-    _actualRound = r;
-    notifyListeners();
-  }
-
-  num get actualSet => _actualSet;
-  set actualSet(num s) {
-    _actualSet = s;
-    notifyListeners();
-  }
-
-  // No chequeo primer y ultimo Set, inhabilito el boton directamente en esos casos
-  void roundUp() {
-    if (actualRound < rounds)
-      actualRound++;
-    else {
-      actualRound = 1;
-      setUp();
-    }
-  }
-
-  void roundDown() {
-    if (actualRound > 1)
-      actualRound--;
-    else {
-      actualRound = rounds;
-      setDown();
-    }
-  }
-
-  void setUp() => actualSet++;
-  void setDown() => actualSet--;
 
   String toString() =>
       "tWork: $_tWork, tRest: $_tRest, tRestSets: $_tRestSets,...";
