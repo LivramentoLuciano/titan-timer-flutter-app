@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:titan_timer_control/constants.dart';
 import 'package:titan_timer_control/model/routine.dart';
 import 'package:titan_timer_control/view/screens/bt_connection.dart';
-import 'package:titan_timer_control/view/screens/control.dart';
+import 'package:titan_timer_control/view/screens/control_screen.dart';
 import 'package:titan_timer_control/view/screens/modes_screen.dart';
 import 'package:titan_timer_control/view/screens/routine_settings.dart';
 
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
         title: "Titan Timer Control",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.indigo,
+          primarySwatch: Colors.deepOrange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: MODES_ROUTE,
