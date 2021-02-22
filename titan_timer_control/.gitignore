@@ -1,3 +1,6 @@
+# Archivos a ignorar mios
+/local-files/
+
 # Miscellaneous
 *.class
 *.log
