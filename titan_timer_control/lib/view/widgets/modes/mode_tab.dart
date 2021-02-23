@@ -3,20 +3,21 @@ import 'package:provider/provider.dart';
 import 'package:titan_timer_control/constants.dart';
 import 'package:titan_timer_control/model/routine.dart';
 
-class ModeTab extends StatelessWidget {
-  ModeTab({@required this.name});
-  final String name;
+class ModeWidget extends StatelessWidget {
+  ModeWidget({@required this.mode});
+  final TrainingMode mode;
 
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
     final routine = Provider.of<Routine>(context);
-    final String _description = trainingModes[name]["description"];
-    final String _imgURL = trainingModes[name]["img-icon"];
+    final String _name = mode.name;
+    final String _description = mode.description;
+    final String _imgURL = mode.imageUrl;
 
     _handleTapMode() {
-      routine.mode = name;
-      routine.defaults(name); // reemplaza lo que hacia con un Constructor.MODO()...
+      routine.mode = _name;
+      routine.defaults(_name); // reemplaza lo que hacia con un Constructor.MODO()...
       Navigator.of(context).pushNamed(ROUTINE_SETTINGS_ROUTE);
     }
 
@@ -32,7 +33,7 @@ class ModeTab extends StatelessWidget {
             padding: const EdgeInsets.only(top: 24.0, left: 12, bottom: 24),
             child: ListTile(
               title: Text(
-                name.toUpperCase(),
+                _name.toUpperCase(),
                 style: TextStyle(fontSize: 24),
               ),
               subtitle: Text(_description),

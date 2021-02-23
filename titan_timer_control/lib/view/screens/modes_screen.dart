@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:titan_timer_control/constants.dart';
 import 'package:titan_timer_control/view/widgets/modes/mode_tab.dart';
 
 class ModesScreen extends StatelessWidget {
@@ -33,12 +34,9 @@ class ModesScreen extends StatelessWidget {
                 ),
                 Divider(height: 24),
                 Column(
-                  children: [
-                    ModeTab(name: "amrap"),
-                    ModeTab(name: "hiit"),
-                    ModeTab(name: "tabata"),
-                    ModeTab(name: "combate"),
-                  ],
+                  children: trainingModes
+                      .map((_mode) => ModeWidget(mode: _mode))
+                      .toList(),
                 ),
               ],
             ),

@@ -11,22 +11,32 @@ String mmss(num secs) {
   return mmss;
 }
 
+class TrainingMode {
+  String name, description, imageUrl;
+  TrainingMode({this.name, this.description, this.imageUrl});
+}
 
-Map<String, dynamic> trainingModes = {
-  "amrap": {
-    "description": "Haz todas las repeticiones que puedas en el tiempo dado.",
-    "img-icon": "local-files/img_gym.jpg",
-  },
-  "hiit": {
-    "description": "Intervalos de alta intensidad, combinado ejercicios aeróbicos y anaeróbicos.",
-    "img-icon": "local-files/img_gym2.jpg",
-  },
-  "tabata": {
-    "description": "Intervalos de alta intensidad y pequeño tiempo de descanso.",
-    "img-icon": "local-files/img_gym4.jpg",
-  },
-  "combate": {
-    "description": "Podrás configurar el tiempo de Round deseado para combates de boxeo, kickboxing y más.",
-    "img-icon": "local-files/img_box.jpg",
-  },
-};
+final List trainingModes = <TrainingMode>[
+  TrainingMode(
+    name: "amrap",
+    description: "Haz todas las repeticiones que puedas en el tiempo dado.",
+    imageUrl: "local-files/img_gym.jpg",
+  ),
+  TrainingMode(
+    name: "hiit",
+    description:
+        "Intervalos de alta intensidad, combinado ejercicios aeróbicos y anaeróbicos.",
+    imageUrl: "local-files/img_gym2.jpg",
+  ),
+  TrainingMode(
+    name: "tabata",
+    description: "Intervalos de alta intensidad y pequeño tiempo de descanso.",
+    imageUrl: "local-files/img_gym4.jpg",
+  ),
+  TrainingMode(
+    name: "combate",
+    description:
+        "Podrás configurar el tiempo de Round deseado para combates de boxeo, kickboxing y más.",
+    imageUrl: "local-files/img_box.jpg",
+  ),
+];
