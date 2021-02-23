@@ -14,7 +14,7 @@ class ControlCard extends StatelessWidget {
     return SizedBox(
       width: size.width,
       child: Card(
-        margin: const EdgeInsets.all(12.0),
+        margin: const EdgeInsets.only(left:12.0, right: 12.0, bottom: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
           padding: const EdgeInsets.all(12.0),

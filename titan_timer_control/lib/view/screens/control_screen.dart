@@ -38,13 +38,6 @@ class _ControlScreenState extends State<ControlScreen> {
       ),
       body: Stack(
         children: [
-          // Fondo Liso
-          // SizedBox.expand(
-          //   child: Container(
-          //     color: Colors.grey[200],
-          //   ),
-          // ),
-
           // Video de fondo
           SizedBox.expand(
             child: FittedBox(
