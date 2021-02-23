@@ -11,6 +11,7 @@ class TimeSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     // uso Provider de Routine para poder acceder a la misma sin pasajes de parametros
     final routine = Provider.of<Routine>(context);
+    
     final num _time = name == "work"
         ? routine.tWork
         : name == "rest"
@@ -22,6 +23,12 @@ class TimeSlider extends StatelessWidget {
         : name == "rest"
             ? "Recuperación:"
             : "Descanso entre sets:";
+    
+    final num _maxT = name == "work"
+        ? routine.max_tWork
+        : name == "rest"
+            ? routine.max_tRest
+            : routine.max_tRestSets;
 
     _handleNewValue(newValue) {
       if (name == "work")
@@ -50,7 +57,7 @@ class TimeSlider extends StatelessWidget {
               ),
               child: Slider(
                 min: 0,
-                max: 400,
+                max: _maxT.toDouble(),
                 value: _time.toDouble(),
                 onChanged: _handleNewValue,
               ),

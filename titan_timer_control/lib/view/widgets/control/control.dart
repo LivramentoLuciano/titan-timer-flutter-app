@@ -33,7 +33,7 @@ class ControlCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   RepsDisplay(name: "round", value: routine.rounds),
-                  RepsDisplay(name: "set", value: routine.rounds),
+                  RepsDisplay(name: "set", value: routine.sets),
                 ],
               ),
               ControlButtons(),
