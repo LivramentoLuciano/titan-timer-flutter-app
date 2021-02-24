@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:titan_timer_control/view/widgets/bluetooth/connect_bt.dart';
 import 'package:titan_timer_control/view/widgets/control/control.dart';
 import 'package:video_player/video_player.dart';
 
@@ -35,6 +36,7 @@ class _ControlScreenState extends State<ControlScreen> {
         title: Text("Control", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.black,
+        actions: [BtDevicesWidget()],
       ),
       body: Stack(
         children: [
