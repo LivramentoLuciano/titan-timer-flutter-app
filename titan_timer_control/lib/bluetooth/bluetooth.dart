@@ -3,6 +3,7 @@
 // y metodos para enviar datos asociados a la interfaz de mi App (sendPlay, sendPause, sendRoundUp, etc)
 
 import 'dart:async';
+import 'dart:convert' show utf8;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -15,6 +16,13 @@ final String TARGET_DEVICE_NAME = "Cronometro";
 final String TRAMA_INI = '{';
 final String TRAMA_END = '}';
 final String TRAMA_SEP = ';';
+final String START_HEADER = "S";
+final String PAUSE_HEADER = "P";
+final String RESUME_HEADER = "s";
+final String ROUND_UP_HEADER = "R";
+final String ROUND_DOWN_HEADER = "r";
+final String REPLAY_HEADER = "b";
+final String FORWARD_HEADER = "f";
 
 // Cronometro Bluetooth Class
 class CronometroBluetooth with ChangeNotifier {
@@ -33,10 +41,63 @@ class CronometroBluetooth with ChangeNotifier {
       : flutterBlue = FlutterBlue.instance,
         targetDevicesList = [];
 
-  sendPlay() => "Envia Play a BT";
-  sendPause() => "Envia Pause a BT";
-  sendRoundUp() => "Envia RoundUp a BT";
-  sendRoundDown() => "Envia RoundDown a BT";
+  sendStart() {
+    String _header = START_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  sendPause() {
+    String _header = PAUSE_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  sendRoundUp() {
+    String _header = ROUND_UP_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  sendRoundDown() {
+    String _header = ROUND_DOWN_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  sendReplay() {
+    String _header = REPLAY_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  sendForward() {
+    String _header = FORWARD_HEADER;
+    List<String> _datos = [];
+    _sendData(_header, _datos);
+  }
+
+  // Future -> Devolver msj de "errores", "ok"
+  // Recibo 'header' y 'datos []' -> Armo trama antes de enviar
+  Future<String> _sendData(String _header, List<String> _datos) {
+    if (targetCharacteristics == null)
+      return Future.error("Error: Caracteristica Nula");
+
+    String _trama = _makeTrama(header: _header, datos: _datos);
+    List<int> bytes = utf8.encode(_trama);
+    targetCharacteristics.write(bytes);
+    print("Enviando: $_trama");
+  }
+
+  String _makeTrama({@required String header, @required List<String> datos}) {
+    String _trama = TRAMA_INI + header + TRAMA_SEP;
+    if (datos.isNotEmpty)
+      datos.forEach((dato) {
+        _trama += dato + TRAMA_SEP;
+      });
+    _trama += TRAMA_END;
+    return _trama;
+  }
 
   // Estos metodos son generales -> Tamb creo que deberian estar por fuera de CronometroBluetooth
   btScan() {
@@ -53,7 +114,7 @@ class CronometroBluetooth with ChangeNotifier {
     });
   }
 
-  _stopScan() {
+  stopScan() {
     flutterBlue.stopScan();
     scanSubscription.cancel();
   }

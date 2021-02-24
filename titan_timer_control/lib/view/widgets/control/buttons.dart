@@ -7,25 +7,17 @@ class ControlButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
 
-    _handlePlayPause(){
-      print(cronometroBT.sendPlay());
+    _handlePlayPause() {
+      cronometroBT.sendStart();
     }
 
-    _handleRoundDown() {
-      print(cronometroBT.sendRoundDown());
-    }
-
-    _handleRoundUp() {
-      print(cronometroBT.sendRoundUp());
-    }
-
-    _handleReplay() {
-      print("back 10 secs");
-    }
-
-    _handleForward() {
-      print("forward 10 secs");
-    }
+    // dejo los handler aunque ahora solo envian BT
+    // si tuviera timer y round/set actual, deberia actualizarlos aca
+    _handlePause() => cronometroBT.sendPause();
+    _handleRoundDown() => cronometroBT.sendRoundDown();
+    _handleRoundUp() => cronometroBT.sendRoundUp();
+    _handleReplay() => cronometroBT.sendReplay();
+    _handleForward() => cronometroBT.sendForward();
 
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),

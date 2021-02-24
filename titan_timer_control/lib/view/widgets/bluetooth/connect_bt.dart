@@ -14,8 +14,8 @@ class BtDevicesWidget extends StatelessWidget {
     List<DeviceChoice> _deviceChoicesList = [];
 
     _handleSelected(DeviceChoice deviceChoiceSelected) {
-      // print("Seleccionó ${deviceChoiceSelected.device}");
       cronometroBT.targetDevice = deviceChoiceSelected.device;
+      // cronometroBT.stopScan();
       cronometroBT.connect();
     }
 
