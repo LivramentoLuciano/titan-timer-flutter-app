@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_timer_control/bluetooth/bluetooth.dart';
 
@@ -12,18 +13,21 @@ class BtDevicesWidget extends StatelessWidget {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
     List<DeviceChoice> _deviceChoicesList = [];
 
-    _handleSelected(DeviceChoice deviceChoiced) {
-      print("Seleccionó ${deviceChoiced.name}");
+    _handleSelected(DeviceChoice deviceChoiceSelected) {
+      // print("Seleccionó ${deviceChoiceSelected.device}");
+      cronometroBT.targetDevice = deviceChoiceSelected.device;
+      cronometroBT.connect();
     }
 
     return PopupMenuButton(
       itemBuilder: (context) {
         // if (cronometroBT.targetsAvailable == 0) ???
+        // Agregar if (isScanning) return [] omitir scaneo -> ver flutterBlue.isScanning
         cronometroBT.btScan();
 
         // Cada target disponible lo agrego a mis 'Choices'
         cronometroBT.targetDevicesList.forEach((device) {
-          _deviceChoicesList.add(DeviceChoice(name: device.name));
+          _deviceChoicesList.add(DeviceChoice(device: device));
         });
 
         // Muestro Devices para conectar (asumo que se ira llenando la lista desde el Provider)
@@ -31,7 +35,7 @@ class BtDevicesWidget extends StatelessWidget {
           return PopupMenuItem<DeviceChoice>(
             value: deviceChoice,
             child: Text(
-              "${deviceChoice.name}",
+              "${deviceChoice.device.name}",
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
           );
@@ -44,6 +48,6 @@ class BtDevicesWidget extends StatelessWidget {
 }
 
 class DeviceChoice {
-  final String name;
-  DeviceChoice({this.name});
+  final BluetoothDevice device;
+  DeviceChoice({this.device});
 }

@@ -58,7 +58,7 @@ class CronometroBluetooth with ChangeNotifier {
     scanSubscription.cancel();
   }
 
-  _connect() async {
+  connect() async {
     if (targetDevice == null) return;
     await targetDevice.connect();
     _discoverServices();
