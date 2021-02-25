@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:titan_timer_control/view/widgets/bluetooth/connect_bt.dart';
+import 'package:titan_timer_control/view/widgets/bluetooth/show_devices.dart';
 import 'package:titan_timer_control/view/widgets/control/background_video.dart';
 import 'package:titan_timer_control/view/widgets/control/control.dart';
 
@@ -12,7 +12,7 @@ class ControlScreen extends StatelessWidget {
         title: Text("Control", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.black,
-        actions: [BtDevicesWidget()],
+        actions: [SearchBluetooth()],
       ),
       body: Stack(
         children: [
