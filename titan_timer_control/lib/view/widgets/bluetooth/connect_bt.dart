@@ -30,6 +30,10 @@ class BtDevicesWidget extends StatelessWidget {
           _deviceChoicesList.add(DeviceChoice(device: device));
         });
 
+        // No anduvo llenado dinamico -> No se rebuildea la lista de Items con el Provider
+        // Solo se rebuildea al presionar el popUpButton -> Para ver lista actualizada tengo que volver a presionar
+        // if (_deviceChoicesList.isEmpty) return [PopupMenuItem(child: Text("Buscando..."), value: "Buscando")];
+        
         // Muestro Devices para conectar (asumo que se ira llenando la lista desde el Provider)
         return _deviceChoicesList.map((deviceChoice) {
           return PopupMenuItem<DeviceChoice>(

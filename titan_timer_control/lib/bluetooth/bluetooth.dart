@@ -106,17 +106,21 @@ class CronometroBluetooth with ChangeNotifier {
         flutterBlue.scan(timeout: Duration(seconds: 5)).listen((result) {
       scanResults.add(result.device);
       if (isCronometroTitan(result)) {
-        if (!targetDevicesList.contains(result.device))
+        if (!targetDevicesList.contains(result.device)) {
           targetDevicesList.add(result.device);
+          notifyListeners();
+        }
       }
     }, onDone: () {
       print("Termino el scanStream");
+      notifyListeners();
     });
   }
 
   stopScan() {
     flutterBlue.stopScan();
     scanSubscription.cancel();
+    notifyListeners();
   }
 
   connect() async {
