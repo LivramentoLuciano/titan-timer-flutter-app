@@ -10,8 +10,6 @@ class RoutineSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final routine = Provider.of<Routine>(context);
 
-    bool _withSets() => (routine.mode != "amrap" && routine.mode != "combate");
-
     return Scaffold(
       appBar: AppBar(title: Text("Configuración de tiempos")),
       body: Center(
@@ -22,14 +20,14 @@ class RoutineSettingsScreen extends StatelessWidget {
             Divider(),
             TimeSlider(name: "rest"),
             Divider(),
-            if (_withSets()) TimeSlider(name: "rest-set"),
-            if (_withSets()) Divider(),
+            if (routine.withSets) TimeSlider(name: "rest-set"),
+            if (routine.withSets) Divider(),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   RepsSetter(name: "round"),
-                  if (_withSets()) RepsSetter(name: "set"),
+                  if (routine.withSets) RepsSetter(name: "set"),
                 ],
               ),
             ),

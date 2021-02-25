@@ -23,15 +23,6 @@ class _ControlScreenState extends State<ControlScreen> {
     _controller.play();
   }
 
-  // didChangeDep... para poder tener acceso al context y usar el Provider de Cronometro
-  // Y realizo un 'scan' al iniciar esta pantalla (igual no sirve si el cronometr estaba apagado al iniciar)
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final cronometroBT = Provider.of<CronometroBluetooth>(context);
-  //   cronometroBT.btScan();
-  // }
-
   @override
   void dispose() {
     _controller.dispose();

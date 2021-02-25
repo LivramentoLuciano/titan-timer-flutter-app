@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+// Referencia para el boton de Play/Pausa (estado del cronometro) ???
+enum RoutineState { STARTED, PAUSED, STOPPED }
+
 class Routine with ChangeNotifier {
   num _tWork, _tRest, _tRestSets;
   num _max_tWork, _max_tRest, _max_tRestSets;
   num _rounds, _sets;
   num _maxRounds, _maxSets;
   String _mode;
+  RoutineState _state; // playing, paused, ...
 
   Routine({tWork, tRest, tRestSets, rounds, sets})
       : _tWork = tWork,
@@ -15,7 +19,8 @@ class Routine with ChangeNotifier {
         _sets = 2,
         _maxRounds = 15,
         _maxSets = 15,
-        _mode = "amrap";
+        _mode = "amrap",
+        _state = RoutineState.STOPPED;
 
   num get tWork => _tWork;
   set tWork(num tW) {
@@ -83,6 +88,12 @@ class Routine with ChangeNotifier {
     notifyListeners();
   }
 
+  RoutineState get state => _state;
+  set state (RoutineState s) {
+    _state = s;
+    notifyListeners();
+  }
+
   // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc  
   void defaults(String mode) {
     if (mode == "amrap"){
@@ -131,6 +142,10 @@ class Routine with ChangeNotifier {
       max_tRestSets = 0;
     }
   }
+
+  // Para mostrar o no informacion sobre 'Sets', 'DescansoSets'
+  // quizas podria ser directamente si 'sets>1' pero Ojo con los defaults puestos
+  bool get withSets => !(mode == "amrap" || mode == "combate");
 
   String toString() =>
       "tWork: $_tWork, tRest: $_tRest, tRestSets: $_tRestSets,...";

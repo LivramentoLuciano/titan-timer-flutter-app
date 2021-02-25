@@ -14,7 +14,7 @@ class ControlCard extends StatelessWidget {
     return SizedBox(
       width: size.width,
       child: Card(
-        margin: const EdgeInsets.only(left:12.0, right: 12.0, bottom: 16),
+        margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -26,14 +26,19 @@ class ControlCard extends StatelessWidget {
                 children: [
                   DurationDisplay(name: "work", time: routine.tWork),
                   DurationDisplay(name: "rest", time: routine.tRest),
-                  DurationDisplay(name: "rest-set", time: routine.tRestSets),
+                  if (routine.withSets)
+                    DurationDisplay(name: "rest-set", time: routine.tRestSets),
+                  if (!routine.withSets)
+                    RepsDisplay(name: "round", value: routine.rounds),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  RepsDisplay(name: "round", value: routine.rounds),
-                  RepsDisplay(name: "set", value: routine.sets),
+                  if (routine.withSets)
+                    RepsDisplay(name: "round", value: routine.rounds),
+                  if (routine.withSets)
+                    RepsDisplay(name: "set", value: routine.sets),
                 ],
               ),
               ControlButtons(),

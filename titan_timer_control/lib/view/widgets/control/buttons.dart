@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_timer_control/bluetooth/bluetooth.dart';
+import 'package:titan_timer_control/model/routine.dart';
 
 class ControlButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
+    final routine = Provider.of<Routine>(context);
+
+    final _playIcon = routine.state == RoutineState.STOPPED ||
+                    routine.state == RoutineState.PAUSED
+                ? Icon(Icons.play_arrow)
+                : Icon(Icons.pause);
 
     _handlePlayPause() {
-      cronometroBT.sendStart();
+      if (routine.state == RoutineState.PAUSED ||
+          routine.state == RoutineState.STOPPED) {
+        routine.state = RoutineState.STARTED;
+        cronometroBT.sendStart();
+      } else {
+        routine.state = RoutineState.PAUSED;
+        cronometroBT.sendPause();
+      }
     }
 
     // dejo los handler aunque ahora solo envian BT
     // si tuviera timer y round/set actual, deberia actualizarlos aca
-    _handlePause() => cronometroBT.sendPause();
     _handleRoundDown() => cronometroBT.sendRoundDown();
     _handleRoundUp() => cronometroBT.sendRoundUp();
     _handleReplay() => cronometroBT.sendReplay();
@@ -35,7 +48,7 @@ class ControlButtons extends StatelessWidget {
           ),
           FloatingActionButton(
             onPressed: _handlePlayPause,
-            child: Icon(Icons.play_arrow),
+            child: _playIcon,
           ),
           FlatButton(
             onPressed: _handleForward,
