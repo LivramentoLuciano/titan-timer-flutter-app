@@ -11,26 +11,45 @@ class TimeSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     // uso Provider de Routine para poder acceder a la misma sin pasajes de parametros
     final routine = Provider.of<Routine>(context);
-    
-    final num _time = name == "work"
-        ? routine.tWork
-        : name == "rest"
-            ? routine.tRest
-            : routine.tRestSets;
-    
-    final String _title = name == "work"
-        ? "Trabajo:"
-        : name == "rest"
-            ? "Recuperación:"
-            : "Descanso entre sets:";
-    
-    final num _maxT = name == "work"
-        ? routine.max_tWork
-        : name == "rest"
-            ? routine.max_tRest
-            : routine.max_tRestSets;
+
+    Map<String, dynamic> _properties() {
+      Map<String, dynamic> v;
+      if (name == "work") {
+        v = {
+          "time": routine.tWork,
+          "title": "Trabajo:",
+          "maxT": routine.max_tWork,
+          "minT": routine.min_tWork
+        };
+      } else if (name == "rest") {
+        v = {
+          "time": routine.tRest,
+          "title": "Preparación:",
+          "maxT": routine.max_tRest,
+          "minT": routine.min_tRest
+        };
+      } else {
+        v = {
+          "time": routine.tRestSets,
+          "title": "Descanso:",
+          "maxT": routine.max_tRestSets,
+          "minT": routine.min_tRestSets
+        };
+      }
+      return v;
+    }
 
     _handleNewValue(newValue) {
+      // Le doy pasos al slider (No sube de a 1 segundo)
+      double _discretizo(double value){
+        final _paso = routine.mode == "amrap" || routine.mode == "combat" ? 30 : 2;
+        final _valueD = ((value.toInt() ~/ _paso) * _paso).toDouble();
+        if (_valueD < _properties()["minT"]) return _properties()["minT"].toDouble();
+        if (_valueD > _properties()["maxT"]) return _properties()["maxT"].toDouble();
+        return _valueD;
+      }
+
+      newValue = _discretizo(newValue);
       if (name == "work")
         routine.tWork = newValue;
       else if (name == "rest")
@@ -45,10 +64,11 @@ class TimeSlider extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_title, style: TextStyle(fontSize: 18)),
+            Text(_properties()["title"], style: TextStyle(fontSize: 18)),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(mmss(_time), style: Theme.of(context).textTheme.headline4),
+              child: Text(mmss(_properties()["time"]),
+                  style: Theme.of(context).textTheme.headline4),
             ),
             Container(
               decoration: BoxDecoration(
@@ -56,9 +76,9 @@ class TimeSlider extends StatelessWidget {
                 color: Colors.grey[200],
               ),
               child: Slider(
-                min: 0,
-                max: _maxT.toDouble(),
-                value: _time.toDouble(),
+                min: _properties()["minT"].toDouble(),
+                max: _properties()["maxT"].toDouble(),
+                value: _properties()["time"].toDouble(),
                 onChanged: _handleNewValue,
               ),
             ),

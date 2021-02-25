@@ -5,10 +5,11 @@ enum RoutineState { STARTED, PAUSED, STOPPED }
 
 class Routine with ChangeNotifier {
   num _tWork, _tRest, _tRestSets;
-  num _max_tWork, _max_tRest, _max_tRestSets;
+  num max_tWork, max_tRest, max_tRestSets;
+  num min_tWork, min_tRest, min_tRestSets;
   num _rounds, _sets;
-  num _maxRounds, _maxSets;
-  String _mode;
+  num maxRounds, maxSets;
+  String mode;
   RoutineState _state; // playing, paused, ...
 
   Routine({tWork, tRest, tRestSets, rounds, sets})
@@ -17,9 +18,6 @@ class Routine with ChangeNotifier {
         _tRestSets = tRestSets,
         _rounds = 3,
         _sets = 2,
-        _maxRounds = 15,
-        _maxSets = 15,
-        _mode = "amrap",
         _state = RoutineState.STOPPED;
 
   num get tWork => _tWork;
@@ -52,51 +50,15 @@ class Routine with ChangeNotifier {
     notifyListeners();
   }
 
-  num get maxRounds => _maxRounds;
-  set maxRounds (num max) {
-    _maxRounds = max;
-    notifyListeners();
-  }
-
-  num get maxSets => _maxSets;
-  set maxSets (num max) {
-    _maxSets = max;
-    notifyListeners();
-  }
-
-  String get mode => _mode;
-  set mode(String m) {
-    _mode = m;
-    notifyListeners();
-  }
-
-  num get max_tWork => _max_tWork;
-  set max_tWork (num max) {
-    _max_tWork = max;
-    notifyListeners();
-  }
-
-  num get max_tRest => _max_tRest;
-  set max_tRest (num max) {
-    _max_tRest = max;
-    notifyListeners();
-  }
-
-  num get max_tRestSets => _max_tRestSets;
-  set max_tRestSets (num max) {
-    _max_tRestSets = max;
-    notifyListeners();
-  }
-
   RoutineState get state => _state;
-  set state (RoutineState s) {
+  set state(RoutineState s) {
     _state = s;
     notifyListeners();
   }
 
-  // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc  
+  // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc
   void defaults(String mode) {
-    if (mode == "amrap"){
+    if (mode == "amrap") {
       rounds = 2;
       sets = 1;
       tWork = 900;
@@ -107,7 +69,10 @@ class Routine with ChangeNotifier {
       max_tWork = 1200;
       max_tRest = 300;
       max_tRestSets = 0;
-    } else if (mode == "hiit"){
+      min_tWork = 60;
+      min_tRest = 30;
+      min_tRestSets = 0;
+    } else if (mode == "hiit") {
       rounds = 8;
       sets = 4;
       tWork = 20;
@@ -118,7 +83,10 @@ class Routine with ChangeNotifier {
       max_tWork = 60;
       max_tRest = 60;
       max_tRestSets = 300;
-    } else if (mode == "tabata"){
+      min_tWork = 5;
+      min_tRest = 0;
+      min_tRestSets = 10;
+    } else if (mode == "tabata") {
       rounds = 8;
       sets = 4;
       tWork = 50;
@@ -129,7 +97,10 @@ class Routine with ChangeNotifier {
       max_tWork = 120;
       max_tRest = 120;
       max_tRestSets = 180;
-    } else if (mode == "combate"){
+      min_tWork = 5;
+      min_tRest = 0;
+      min_tRestSets = 10;
+    } else if (mode == "combate") {
       rounds = 10;
       sets = 1;
       tWork = 120;
@@ -140,6 +111,9 @@ class Routine with ChangeNotifier {
       max_tWork = 180;
       max_tRest = 120;
       max_tRestSets = 0;
+      min_tWork = 30;
+      min_tRest = 30;
+      min_tRestSets = 0;
     }
   }
 
