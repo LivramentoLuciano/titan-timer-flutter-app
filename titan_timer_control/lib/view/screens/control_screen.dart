@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:titan_timer_control/view/widgets/bluetooth/connect_bt.dart';
 import 'package:titan_timer_control/view/widgets/control/control.dart';
 import 'package:video_player/video_player.dart';
 
@@ -22,6 +23,15 @@ class _ControlScreenState extends State<ControlScreen> {
     _controller.play();
   }
 
+  // didChangeDep... para poder tener acceso al context y usar el Provider de Cronometro
+  // Y realizo un 'scan' al iniciar esta pantalla (igual no sirve si el cronometr estaba apagado al iniciar)
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final cronometroBT = Provider.of<CronometroBluetooth>(context);
+  //   cronometroBT.btScan();
+  // }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -35,6 +45,7 @@ class _ControlScreenState extends State<ControlScreen> {
         title: Text("Control", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.black,
+        actions: [BtDevicesWidget()],
       ),
       body: Stack(
         children: [
