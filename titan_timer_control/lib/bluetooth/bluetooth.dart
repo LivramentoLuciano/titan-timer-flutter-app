@@ -16,6 +16,7 @@ final String TARGET_DEVICE_NAME = "Cronometro";
 final String TRAMA_INI = '{';
 final String TRAMA_END = '}';
 final String TRAMA_SEP = ';';
+final String LOAD_ROUTINE_HEADER = "L";
 final String START_HEADER = "S";
 final String PAUSE_HEADER = "P";
 final String RESUME_HEADER = "s";
@@ -40,6 +41,11 @@ class CronometroBluetooth with ChangeNotifier {
   CronometroBluetooth()
       : flutterBlue = FlutterBlue.instance,
         targetDevicesList = [];
+
+  sendLoadRoutine(List<dynamic> _datos){
+    String _header = LOAD_ROUTINE_HEADER;
+    _sendData(_header, _datos);
+  }
 
   sendStart() {
     String _header = START_HEADER;
@@ -79,7 +85,7 @@ class CronometroBluetooth with ChangeNotifier {
 
   // Future -> Devolver msj de "errores", "ok"
   // Recibo 'header' y 'datos []' -> Armo trama antes de enviar
-  Future<String> _sendData(String _header, List<String> _datos) {
+  Future<String> _sendData(String _header, List<dynamic> _datos) {
     if (targetCharacteristics == null)
       return Future.error("Error: Caracteristica Nula");
 
@@ -89,10 +95,12 @@ class CronometroBluetooth with ChangeNotifier {
     print("Enviando: $_trama");
   }
 
-  String _makeTrama({@required String header, @required List<String> datos}) {
+  String _makeTrama({@required String header, @required List<dynamic> datos}) {
     String _trama = TRAMA_INI + header + TRAMA_SEP;
     if (datos.isNotEmpty)
       datos.forEach((dato) {
+        if (!(dato  is String))
+          dato = "$dato";
         _trama += dato + TRAMA_SEP;
       });
     _trama += TRAMA_END;

@@ -56,6 +56,15 @@ class Routine with ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get settings => [
+    mode,
+    tWork,
+    tRest,
+    tRestSets,
+    rounds,
+    sets,
+  ];
+
   // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc
   void defaults(String mode) {
     if (mode == "amrap") {
