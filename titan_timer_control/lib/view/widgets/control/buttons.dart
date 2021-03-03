@@ -13,16 +13,18 @@ class ControlButtons extends StatelessWidget {
         ? Icon(Icons.pause)
         : Icon(Icons.play_arrow);
 
-    _handleLoadRoutine() => cronometroBT.sendLoadRoutine(routine.settings);
-
-    _handlePlayPause() {
-      if (routine.state == RoutineState.PAUSED ||
-          routine.state == RoutineState.STOPPED) {
+    _handlePlayPause() async {
+      if (routine.state == RoutineState.STOPPED) {
+        await cronometroBT.sendLoadRoutine(routine.settings);
+        await cronometroBT.sendStart();
+        // Deberia esperar recibir OK para cambiar 'state'
         routine.state = RoutineState.STARTED;
-        cronometroBT.sendStart();
+      } else if (routine.state == RoutineState.PAUSED) {
+        await cronometroBT.sendStart();
+        routine.state = RoutineState.STARTED;
       } else {
+        await cronometroBT.sendPause();
         routine.state = RoutineState.PAUSED;
-        cronometroBT.sendPause();
       }
     }
 
@@ -62,10 +64,6 @@ class ControlButtons extends StatelessWidget {
                 child: Icon(Icons.fast_forward, color: Colors.black, size: 30),
               )
             ],
-          ),
-          FlatButton(
-            onPressed: _handleLoadRoutine,
-            child: Text("Cargar rutina"),
           ),
         ],
       ),

@@ -42,65 +42,71 @@ class CronometroBluetooth with ChangeNotifier {
       : flutterBlue = FlutterBlue.instance,
         targetDevicesList = [];
 
-  sendLoadRoutine(List<dynamic> _datos){
+  Future<String> sendLoadRoutine(List<dynamic> _datos) async {
     String _header = LOAD_ROUTINE_HEADER;
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return Future.value(_result);
   }
 
-  sendStart() {
+  Future<String> sendStart() async {
     String _header = START_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
-  sendPause() {
+  Future<String> sendPause() async {
     String _header = PAUSE_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
-  sendRoundUp() {
+  Future<String> sendRoundUp() async {
     String _header = ROUND_UP_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
-  sendRoundDown() {
+  Future<String> sendRoundDown() async {
     String _header = ROUND_DOWN_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
-  sendReplay() {
+  Future<String> sendReplay() async {
     String _header = REPLAY_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
-  sendForward() {
+  Future<String> sendForward() async {
     String _header = FORWARD_HEADER;
     List<String> _datos = [];
-    _sendData(_header, _datos);
+    final _result = await _sendData(_header, _datos);
+    return _result;
   }
 
   // Future -> Devolver msj de "errores", "ok"
   // Recibo 'header' y 'datos []' -> Armo trama antes de enviar
-  Future<String> _sendData(String _header, List<dynamic> _datos) {
+  Future<String> _sendData(String _header, List<dynamic> _datos) async {
     if (targetCharacteristics == null)
       return Future.error("Error: Caracteristica Nula");
 
     String _trama = _makeTrama(header: _header, datos: _datos);
     List<int> bytes = utf8.encode(_trama);
-    targetCharacteristics.write(bytes);
-    print("Enviando: $_trama");
+    final _result = await targetCharacteristics.write(bytes);
+    return _result;
   }
 
   String _makeTrama({@required String header, @required List<dynamic> datos}) {
     String _trama = TRAMA_INI + header + TRAMA_SEP;
     if (datos.isNotEmpty)
       datos.forEach((dato) {
-        if (!(dato  is String))
-          dato = "$dato";
+        if (!(dato is String)) dato = "$dato";
         _trama += dato + TRAMA_SEP;
       });
     _trama += TRAMA_END;
