@@ -24,19 +24,20 @@ final String ROUND_UP_HEADER = "R";
 final String ROUND_DOWN_HEADER = "r";
 final String REPLAY_HEADER = "b";
 final String FORWARD_HEADER = "f";
+final String RESPONSE_OK_HEADER = 'K';
 
-// Cronometro Bluetooth Class
 class CronometroBluetooth with ChangeNotifier {
   // Estos son generales -> Deberian estar por fuera de CronometroBluetooth
   FlutterBlue flutterBlue;
   StreamSubscription<ScanResult> scanSubscription;
   List<BluetoothDevice> scanResults;
-  List<BluetoothDevice> targetDevicesList;
+  List<BluetoothDevice> targetDevicesList; // Lista los 'target' disponibles
 
   BluetoothDevice targetDevice;
   BluetoothCharacteristic targetCharacteristics;
   StreamSubscription<BluetoothDeviceState> stateSubscription;
-  BluetoothDeviceState state;
+  BluetoothDeviceState state; // Estado de conexion al target
+  StreamSubscription<List<int>> notifySubscription; // Recepcion de mensajes
 
   CronometroBluetooth()
       : flutterBlue = FlutterBlue.instance,
@@ -163,9 +164,76 @@ class CronometroBluetooth with ChangeNotifier {
           }
         });
     });
+    startNotifySubscription(); // Prueba: habilito recepcion de mensajes
+    startStateSubscription(); // Inicio subscripcion de estado de conexion
   }
 
   disconect() {}
+
+  // subscripcion: dispositivo 'conectado', 'desconectado', 'conectando', 'desconectando'
+  void startStateSubscription() {
+    stateSubscription = targetDevice.state.listen((_state) {
+      state = _state;
+      print("Actualiza 'state' bluetooth: $_state");
+    });
+  }
+
+  cancelStateSubscription() =>
+      (stateSubscription != null) ? stateSubscription.cancel() : null;
+
+  // Comienza a 'escuchar', recepcion de mensajes
+  startNotifySubscription() async {
+    await targetCharacteristics.setNotifyValue(true);
+
+    print("Inicio notify Subscription");
+    notifySubscription = targetCharacteristics.value.listen((_value) {
+      final _data = utf8.decode(_value);
+      final _trama = getTrama(_data);
+      print("Data recibida: $_data");
+
+      if (_trama != null) processCommand(_trama);
+    });
+  }
+
+  cancelNotifySubscription() =>
+      (notifySubscription != null) ? notifySubscription.cancel() : null;
+
+  // Solo admito tramas correctas
+  String getTrama(String _data) {
+    bool _isValidTrama() => (_data.contains(TRAMA_INI) &&
+        _data.contains(TRAMA_END)); // Sirve por ahora, para pruebas
+    String _trama;
+
+    if (_isValidTrama())
+      _trama = _data.substring(
+          _data.indexOf(TRAMA_INI) + 1, _data.indexOf(TRAMA_END));
+
+    return _trama;
+  }
+
+  void processCommand(String _trama) {
+    final List<String> _tramaValues = _trama.split(TRAMA_SEP);
+
+    final String _header = _tramaValues[0]; // obtengo el Header
+    final List<String> _data = _tramaValues; // copio
+    _data.removeAt(0); // elimino el Header, me quedo con los 'datos'
+
+    // Las respuestas solo tendran un dato por ahora: el comando al que estan respondiendo
+    final String _cmd = _data[0];
+    if (_header == RESPONSE_OK_HEADER) {
+      if (_cmd == LOAD_ROUTINE_HEADER)
+        print("OK de Rutina Cargada");
+      else if (_cmd == START_HEADER)
+        print("OK de Start");
+      else if (_cmd == PAUSE_HEADER)
+        print("OK de Pause");
+      else if (_cmd == RESUME_HEADER)
+        print("OK de Resume");
+      else if (_cmd == ROUND_UP_HEADER)
+        print("OK de Round Up");
+      else if (_cmd == ROUND_DOWN_HEADER) print("OK de Round Down");
+    }
+  }
 
   int get targetsAvailable => targetDevicesList.length;
 
