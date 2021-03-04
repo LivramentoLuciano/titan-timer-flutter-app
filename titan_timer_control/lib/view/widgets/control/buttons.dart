@@ -20,7 +20,7 @@ class ControlButtons extends StatelessWidget {
         // Deberia esperar recibir OK para cambiar 'state'
         routine.state = RoutineState.STARTED;
       } else if (routine.state == RoutineState.PAUSED) {
-        await cronometroBT.sendStart();
+        await cronometroBT.sendResume();
         routine.state = RoutineState.STARTED;
       } else {
         await cronometroBT.sendPause();
@@ -30,8 +30,16 @@ class ControlButtons extends StatelessWidget {
 
     // dejo los handler aunque ahora solo envian BT
     // si tuviera timer y round/set actual, deberia actualizarlos aca
-    _handleRoundDown() => cronometroBT.sendRoundDown();
-    _handleRoundUp() => cronometroBT.sendRoundUp();
+    _handleRoundDown() {
+      cronometroBT.sendRoundDown();
+      routine.state = RoutineState.PAUSED;
+    }
+
+    _handleRoundUp() {
+      cronometroBT.sendRoundUp();
+      routine.state = RoutineState.PAUSED;
+    }
+
     _handleReplay() => cronometroBT.sendReplay();
     _handleForward() => cronometroBT.sendForward();
 

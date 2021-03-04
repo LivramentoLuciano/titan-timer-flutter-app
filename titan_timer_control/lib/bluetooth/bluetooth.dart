@@ -62,6 +62,13 @@ class CronometroBluetooth with ChangeNotifier {
     return _result;
   }
 
+  Future<String> sendResume() async {
+    String _header = RESUME_HEADER;
+    List<String> _datos = [];
+    final _result = await _sendData(_header, _datos);
+    return _result;
+  }
+
   Future<String> sendRoundUp() async {
     String _header = ROUND_UP_HEADER;
     List<String> _datos = [];
