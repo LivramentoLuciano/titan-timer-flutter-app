@@ -56,6 +56,15 @@ class Routine with ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get settings => [
+    mode,
+    tWork,
+    tRest,
+    tRestSets,
+    rounds,
+    sets,
+  ];
+
   // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc
   void defaults(String mode) {
     if (mode == "amrap") {
@@ -72,6 +81,7 @@ class Routine with ChangeNotifier {
       min_tWork = 60;
       min_tRest = 30;
       min_tRestSets = 0;
+      state = RoutineState.STOPPED;
     } else if (mode == "hiit") {
       rounds = 8;
       sets = 4;
@@ -86,6 +96,7 @@ class Routine with ChangeNotifier {
       min_tWork = 5;
       min_tRest = 0;
       min_tRestSets = 10;
+      state = RoutineState.STOPPED;
     } else if (mode == "tabata") {
       rounds = 8;
       sets = 4;
@@ -100,6 +111,7 @@ class Routine with ChangeNotifier {
       min_tWork = 5;
       min_tRest = 0;
       min_tRestSets = 10;
+      state = RoutineState.STOPPED;
     } else if (mode == "combate") {
       rounds = 10;
       sets = 1;
@@ -114,6 +126,7 @@ class Routine with ChangeNotifier {
       min_tWork = 30;
       min_tRest = 30;
       min_tRestSets = 0;
+      state = RoutineState.STOPPED;
     }
   }
 

@@ -25,10 +25,10 @@ class _DevicesListDialogState extends State<DevicesListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    _handleSelected(DeviceChoice deviceChoiceSelected) {
+    _handleSelected(DeviceChoice deviceChoiceSelected) async {
       widget.cronometroBT.targetDevice = deviceChoiceSelected.device;
       widget.cronometroBT.stopScan();
-      widget.cronometroBT.connect();
+      await widget.cronometroBT.connect();
       Navigator.of(context)
           .pop("conectado"); // chequear que 'connect' devuelva Ok antes
     }
