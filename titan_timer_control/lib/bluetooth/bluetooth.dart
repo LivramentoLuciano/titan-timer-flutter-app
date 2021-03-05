@@ -24,7 +24,8 @@ final String ROUND_UP_HEADER = "R";
 final String ROUND_DOWN_HEADER = "r";
 final String REPLAY_HEADER = "b";
 final String FORWARD_HEADER = "f";
-final String RESPONSE_OK_HEADER = 'K';
+final String RESPONSE_OK_HEADER = 'K'; // desde el micro
+final String FINISHED_HEADER = 'F'; // desde el micro
 
 class CronometroBluetooth with ChangeNotifier {
   // Estos son generales -> Deberian estar por fuera de CronometroBluetooth
@@ -145,13 +146,13 @@ class CronometroBluetooth with ChangeNotifier {
     notifyListeners();
   }
 
-  connect() async {
+  Future<void> connect() async {
     if (targetDevice == null) return;
     await targetDevice.connect();
-    _discoverServices();
+    await _discoverServices();
   }
 
-  _discoverServices() async {
+  Future<void> _discoverServices() async {
     if (targetDevice == null) return;
     List<BluetoothService> services = await targetDevice.discoverServices();
 
@@ -164,7 +165,6 @@ class CronometroBluetooth with ChangeNotifier {
           }
         });
     });
-    startNotifySubscription(); // Prueba: habilito recepcion de mensajes
     startStateSubscription(); // Inicio subscripcion de estado de conexion
   }
 
@@ -182,7 +182,8 @@ class CronometroBluetooth with ChangeNotifier {
       (stateSubscription != null) ? stateSubscription.cancel() : null;
 
   // Comienza a 'escuchar', recepcion de mensajes
-  startNotifySubscription() async {
+  startNotifySubscription(
+      Function processCommand, Function callbackSetControlState) async {
     await targetCharacteristics.setNotifyValue(true);
 
     print("Inicio notify Subscription");
@@ -191,7 +192,7 @@ class CronometroBluetooth with ChangeNotifier {
       final _trama = getTrama(_data);
       print("Data recibida: $_data");
 
-      if (_trama != null) processCommand(_trama);
+      if (_trama != null) processCommand(_trama, callbackSetControlState);
     });
   }
 
@@ -211,7 +212,7 @@ class CronometroBluetooth with ChangeNotifier {
     return _trama;
   }
 
-  void processCommand(String _trama) {
+  void processCommand(String _trama, Function setControlState) {
     final List<String> _tramaValues = _trama.split(TRAMA_SEP);
 
     final String _header = _tramaValues[0]; // obtengo el Header
@@ -222,17 +223,17 @@ class CronometroBluetooth with ChangeNotifier {
     final String _cmd = _data[0];
     if (_header == RESPONSE_OK_HEADER) {
       if (_cmd == LOAD_ROUTINE_HEADER)
-        print("OK de Rutina Cargada");
+        sendStart();
       else if (_cmd == START_HEADER)
-        print("OK de Start");
+        setControlState("started");
       else if (_cmd == PAUSE_HEADER)
-        print("OK de Pause");
+        setControlState("paused");
       else if (_cmd == RESUME_HEADER)
-        print("OK de Resume");
+        setControlState("resumed");
       else if (_cmd == ROUND_UP_HEADER)
-        print("OK de Round Up");
-      else if (_cmd == ROUND_DOWN_HEADER) print("OK de Round Down");
-    }
+        setControlState("paused");
+      else if (_cmd == ROUND_DOWN_HEADER) setControlState("paused");
+    } else if (_header == FINISHED_HEADER) setControlState("stopped");
   }
 
   int get targetsAvailable => targetDevicesList.length;

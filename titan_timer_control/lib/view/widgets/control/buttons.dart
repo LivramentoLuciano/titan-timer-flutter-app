@@ -4,42 +4,31 @@ import 'package:titan_timer_control/bluetooth/bluetooth.dart';
 import 'package:titan_timer_control/model/routine.dart';
 
 class ControlButtons extends StatelessWidget {
+  final String controlState;
+  ControlButtons({this.controlState});
+
   @override
   Widget build(BuildContext context) {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
     final routine = Provider.of<Routine>(context);
 
-    final _playIcon = routine.state == RoutineState.STARTED
+    final _playIcon = controlState == "started" || controlState == "resumed"
         ? Icon(Icons.pause)
         : Icon(Icons.play_arrow);
 
-    _handlePlayPause() async {
-      if (routine.state == RoutineState.STOPPED) {
-        await cronometroBT.sendLoadRoutine(routine.settings);
-        await cronometroBT.sendStart();
-        // Deberia esperar recibir OK para cambiar 'state'
-        routine.state = RoutineState.STARTED;
-      } else if (routine.state == RoutineState.PAUSED) {
-        await cronometroBT.sendResume();
-        routine.state = RoutineState.STARTED;
-      } else {
-        await cronometroBT.sendPause();
-        routine.state = RoutineState.PAUSED;
-      }
+    _handlePlayPause() {
+      if (controlState == "stopped")
+        cronometroBT.sendLoadRoutine(routine.settings);
+      else if (controlState == "paused")
+        cronometroBT.sendResume();
+      else if (controlState == "started" || controlState == "resumed")
+        cronometroBT.sendPause();
     }
 
     // dejo los handler aunque ahora solo envian BT
     // si tuviera timer y round/set actual, deberia actualizarlos aca
-    _handleRoundDown() {
-      cronometroBT.sendRoundDown();
-      routine.state = RoutineState.PAUSED;
-    }
-
-    _handleRoundUp() {
-      cronometroBT.sendRoundUp();
-      routine.state = RoutineState.PAUSED;
-    }
-
+    _handleRoundDown() => cronometroBT.sendRoundDown();
+    _handleRoundUp() => cronometroBT.sendRoundUp();
     _handleReplay() => cronometroBT.sendReplay();
     _handleForward() => cronometroBT.sendForward();
 
