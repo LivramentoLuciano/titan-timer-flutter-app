@@ -19,6 +19,7 @@ final String TRAMA_SEP = ';';
 final String LOAD_ROUTINE_HEADER = "L";
 final String START_HEADER = "S";
 final String PAUSE_HEADER = "P";
+final String PLAY_PAUSE_HEADER = "X";
 final String RESUME_HEADER = "s";
 final String ROUND_UP_HEADER = "R";
 final String ROUND_DOWN_HEADER = "r";
@@ -64,6 +65,14 @@ class CronometroBluetooth with ChangeNotifier {
     return _result;
   }
 
+  Future<String> sendPlayPause() async {
+    String _header = PLAY_PAUSE_HEADER;
+    List<String> _datos = [];
+    final _result = await _sendData(_header, _datos);
+    print("manda play/pause--- resultado: $_result");
+    return _result;
+  }
+
   Future<String> sendResume() async {
     String _header = RESUME_HEADER;
     List<String> _datos = [];
@@ -75,6 +84,7 @@ class CronometroBluetooth with ChangeNotifier {
     String _header = ROUND_UP_HEADER;
     List<String> _datos = [];
     final _result = await _sendData(_header, _datos);
+    print("manda roundUp--- resultado: $_result");
     return _result;
   }
 
@@ -183,7 +193,7 @@ class CronometroBluetooth with ChangeNotifier {
 
   // Comienza a 'escuchar', recepcion de mensajes
   startNotifySubscription(
-      Function processCommand, Function callbackSetControlState) async {
+      Function processCommand, Function callbackGetRoutineSettings) async {
     await targetCharacteristics.setNotifyValue(true);
 
     print("Inicio notify Subscription");
@@ -192,7 +202,7 @@ class CronometroBluetooth with ChangeNotifier {
       final _trama = getTrama(_data);
       print("Data recibida: $_data");
 
-      if (_trama != null) processCommand(_trama, callbackSetControlState);
+      if (_trama != null) processCommand(_trama, callbackGetRoutineSettings);
     });
   }
 
@@ -212,28 +222,19 @@ class CronometroBluetooth with ChangeNotifier {
     return _trama;
   }
 
-  void processCommand(String _trama, Function setControlState) {
+  void processCommand(String _trama, Function getRoutineSettings) {
     final List<String> _tramaValues = _trama.split(TRAMA_SEP);
 
     final String _header = _tramaValues[0]; // obtengo el Header
     final List<String> _data = _tramaValues; // copio
     _data.removeAt(0); // elimino el Header, me quedo con los 'datos'
 
-    // Las respuestas solo tendran un dato por ahora: el comando al que estan respondiendo
-    final String _cmd = _data[0];
-    if (_header == RESPONSE_OK_HEADER) {
-      if (_cmd == LOAD_ROUTINE_HEADER)
-        sendStart();
-      else if (_cmd == START_HEADER)
-        setControlState("started");
-      else if (_cmd == PAUSE_HEADER)
-        setControlState("paused");
-      else if (_cmd == RESUME_HEADER)
-        setControlState("resumed");
-      else if (_cmd == ROUND_UP_HEADER)
-        setControlState("paused");
-      else if (_cmd == ROUND_DOWN_HEADER) setControlState("paused");
-    } else if (_header == FINISHED_HEADER) setControlState("stopped");
+     if (_header == RESPONSE_OK_HEADER) {
+      // Es innecesario que mande el sendPlayPause, el micro ya va a saber que viene de un pedido de Rutina y si se cargo le da play
+      // if (_cmd == LOAD_ROUTINE_HEADER) sendPlayPause();
+      // El resto de respuestas Ok ahora no las uso, cambiaban el 'state'
+    } else if (_header == LOAD_ROUTINE_HEADER)
+      sendLoadRoutine(getRoutineSettings());
   }
 
   int get targetsAvailable => targetDevicesList.length;

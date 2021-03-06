@@ -1,29 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_timer_control/bluetooth/bluetooth.dart';
-import 'package:titan_timer_control/model/routine.dart';
 
 class ControlButtons extends StatelessWidget {
-  final String controlState;
-  ControlButtons({this.controlState});
-
   @override
   Widget build(BuildContext context) {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
-    final routine = Provider.of<Routine>(context);
 
-    final _playIcon = controlState == "started" || controlState == "resumed"
-        ? Icon(Icons.pause)
-        : Icon(Icons.play_arrow);
+    Widget _playPauseIcon() =>
+        Row(children: [Icon(Icons.play_arrow), Text("/"), Icon(Icons.pause)]);
 
-    _handlePlayPause() {
-      if (controlState == "stopped")
-        cronometroBT.sendLoadRoutine(routine.settings);
-      else if (controlState == "paused")
-        cronometroBT.sendResume();
-      else if (controlState == "started" || controlState == "resumed")
-        cronometroBT.sendPause();
-    }
+    _handlePlayPause() => cronometroBT.sendPlayPause();
 
     // dejo los handler aunque ahora solo envian BT
     // si tuviera timer y round/set actual, deberia actualizarlos aca
@@ -33,35 +20,53 @@ class ControlButtons extends StatelessWidget {
     _handleForward() => cronometroBT.sendForward();
 
     return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
+      padding: const EdgeInsets.only(top: 24.0, bottom: 6),
       child: Column(
         children: [
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              FlatButton(
-                onPressed: _handleRoundDown,
-                child: Icon(Icons.fast_rewind, color: Colors.black, size: 30),
+              SizedBox(
+                width: 60,
+                child: FlatButton(
+                  onPressed: _handleRoundDown,
+                  child: Icon(Icons.fast_rewind, color: Colors.black, size: 30),
+                  padding: EdgeInsets.all(0),
+                ),
               ),
-              FlatButton(
-                onPressed: _handleReplay,
-                child: Icon(Icons.replay_10, color: Colors.black, size: 30),
+              SizedBox(
+                width: 60,
+                child: FlatButton(
+                  onPressed: _handleReplay,
+                  child: Icon(Icons.replay_10, color: Colors.black, size: 30),
+                  padding: EdgeInsets.all(0),
+                ),
               ),
-              FloatingActionButton(
+              FloatingActionButton.extended(
                 onPressed: _handlePlayPause,
-                child: _playIcon,
+                label: _playPauseIcon(),
               ),
-              FlatButton(
-                onPressed: _handleForward,
-                child: Icon(Icons.forward_10, color: Colors.black, size: 30),
+              SizedBox(
+                width: 60,
+                child: FlatButton(
+                  onPressed: _handleForward,
+                  child: Icon(Icons.forward_10, color: Colors.black, size: 30),
+                  padding: EdgeInsets.all(0),
+                ),
               ),
-              FlatButton(
-                onPressed: _handleRoundUp,
-                child: Icon(Icons.fast_forward, color: Colors.black, size: 30),
-              )
+              SizedBox(
+                width: 60,
+                child: FlatButton(
+                  onPressed: _handleRoundUp,
+                  child:
+                      Icon(Icons.fast_forward, color: Colors.black, size: 30),
+                  padding: EdgeInsets.all(0),
+                ),
+              ),
             ],
           ),
+          // FlatButton(onPressed: () {}, child: Text("Reset")) // o cargar Rutina ? (porque nadie va a entender que es para poder recargar rutina si fui hacia atras y volvi)
         ],
       ),
     );

@@ -35,9 +35,7 @@ class RoutineSettingsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: FlatButton(
-                onPressed: () => Navigator.of(context)
-                    .pushNamed(CONTROL_ROUTE)
-                    .then((_) => routine.state = RoutineState.STOPPED), // parche feo
+                onPressed: () => Navigator.of(context).pushNamed(CONTROL_ROUTE),
                 child: Text("Confirmar", style: TextStyle(fontSize: 18)),
               ),
             )
