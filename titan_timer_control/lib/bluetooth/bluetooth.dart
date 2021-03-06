@@ -26,6 +26,15 @@ final String REPLAY_HEADER = "b";
 final String FORWARD_HEADER = "f";
 final String RESPONSE_OK_HEADER = 'K'; // desde el micro
 final String FINISHED_HEADER = 'F'; // desde el micro
+final String TIMER_STATE_HEADER =
+    'T'; // le pido el 'state' (cuando vuelvo de background)
+
+// Convierto el state recibido como char al valor usado en la app
+final Map<String, String> stateCharToString = {
+  "s": "started",
+  "o": "stopped",
+  "p": "paused",
+};
 
 class CronometroBluetooth with ChangeNotifier {
   // Estos son generales -> Deberian estar por fuera de CronometroBluetooth
@@ -94,6 +103,13 @@ class CronometroBluetooth with ChangeNotifier {
 
   Future<String> sendForward() async {
     String _header = FORWARD_HEADER;
+    List<String> _datos = [];
+    final _result = await _sendData(_header, _datos);
+    return _result;
+  }
+
+  Future<String> sendRequestTimerState() async {
+    String _header = TIMER_STATE_HEADER;
     List<String> _datos = [];
     final _result = await _sendData(_header, _datos);
     return _result;
@@ -233,7 +249,9 @@ class CronometroBluetooth with ChangeNotifier {
       else if (_cmd == ROUND_UP_HEADER)
         setControlState("paused");
       else if (_cmd == ROUND_DOWN_HEADER) setControlState("paused");
-    } else if (_header == FINISHED_HEADER) setControlState("stopped");
+    } else if (_header == TIMER_STATE_HEADER)
+      setControlState(stateCharToString[_cmd]);
+    else if (_header == FINISHED_HEADER) setControlState("stopped");
   }
 
   int get targetsAvailable => targetDevicesList.length;
