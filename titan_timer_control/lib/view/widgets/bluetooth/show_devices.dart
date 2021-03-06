@@ -15,18 +15,18 @@ class SearchBluetooth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _cronometroBT = Provider.of<CronometroBluetooth>(context);
     _showDevices() {
       showDialog(
         context: context,
         builder: (context) {
-          final cronometroBT = Provider.of<CronometroBluetooth>(context);
-          cronometroBT.btScan();
-          return DevicesListDialog(cronometroBT: cronometroBT);
+          _cronometroBT.btScan();
+          return DevicesListDialog(cronometroBT: _cronometroBT);
         },
       ).then((result) {
         print(result); // la salida del dialogo
         if (result == "conectado") {
-          startNotifySubscription(callbackProcessCommand, callbackSetControlState);
+          startNotifySubscription(_cronometroBT, callbackProcessCommand, callbackSetControlState);
         }
       });
     }

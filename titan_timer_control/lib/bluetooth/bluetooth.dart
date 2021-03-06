@@ -196,8 +196,8 @@ class CronometroBluetooth with ChangeNotifier {
     });
   }
 
-  cancelNotifySubscription() =>
-      (notifySubscription != null) ? notifySubscription.cancel() : null;
+  cancelNotifySubscription() async =>
+      (notifySubscription != null) ? await notifySubscription.cancel() : null;
 
   // Solo admito tramas correctas
   String getTrama(String _data) {
