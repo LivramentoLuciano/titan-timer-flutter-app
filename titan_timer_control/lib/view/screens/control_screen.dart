@@ -13,34 +13,34 @@ class ControlScreen extends StatefulWidget {
   _ControlScreenState createState() => _ControlScreenState();
 }
 
-class _ControlScreenState extends State<ControlScreen> {
-  String _controlState; // recibe desde Bluetooth
-
-  // Recepcion de mensajes - No logre cancelarla si lo uso en Provider
-  StreamSubscription<List<int>> _notifySubscription;
+class _ControlScreenState extends State<ControlScreen>
+    with WidgetsBindingObserver {
+  // Dejo statefull por ahora por el 'appLifeCycle'
 
   @override
   void initState() {
-    _controlState = "stopped";
-    final _cronometroBT =
-        Provider.of<CronometroBluetooth>(context, listen: false);
-
-    // Si esta conectado reinicio la notifySubscription, sino, lo hace al conectar
-    if (_cronometroBT.targetDevice != null)
-      _startNotifySubscription(
-          _cronometroBT, _cronometroBT.processCommand, setControlState);
+    WidgetsBinding.instance.addObserver(this); // appcycle
     super.initState();
   }
 
   @override
   void dispose() {
-    // Cancelo el stream, porque sino queda asociado a este widget (por el setState)
-    // Provider.of<CronometroBluetooth>(context, listen: false).cancelNotifySubscription(); // no logro que ande este
-    _cancelNotifySubscription();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void setControlState(String s) => setState(() => _controlState = s);
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // // Pido timerState al micro y actualizo el valor en app
+        Provider.of<CronometroBluetooth>(context, listen: false)
+            .sendRequestTimerState();
+        break;
+      default:
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +54,7 @@ class _ControlScreenState extends State<ControlScreen> {
         backgroundColor: Colors.black,
         actions: [
           SearchBluetooth(
-            startNotifySubscription: _startNotifySubscription,
-            callbackProcessCommand: cronometroBT.processCommand,
-            callbackSetControlState: setControlState,
+            startNotifySubscription: cronometroBT.startNotifySubscription,
           )
         ],
       ),
@@ -64,32 +62,11 @@ class _ControlScreenState extends State<ControlScreen> {
         children: [
           BackgroundVideo(),
           Align(
-            child: ControlCard(controlState: _controlState),
+            child: ControlCard(),
             alignment: Alignment.bottomCenter,
           ),
         ],
       ),
     );
   }
-
-  void _startNotifySubscription(
-    CronometroBluetooth _cronometroBT,
-    Function processCommand,
-    Function callbackSetControlState,
-  ) async {
-    await _cronometroBT.targetCharacteristics.setNotifyValue(true);
-
-    _notifySubscription = _cronometroBT.targetCharacteristics.value.listen(
-      (_value) {
-        final _data = utf8.decode(_value);
-        final _trama = _cronometroBT.getTrama(_data);
-        print("Data recibida: $_data");
-
-        if (_trama != null) processCommand(_trama, callbackSetControlState);
-      },
-    );
-  }
-
-  _cancelNotifySubscription() async =>
-      (_notifySubscription != null) ? await _notifySubscription.cancel() : null;
 }

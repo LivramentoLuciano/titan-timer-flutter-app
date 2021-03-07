@@ -6,9 +6,6 @@ import 'package:titan_timer_control/view/widgets/control/duration_display.dart';
 import 'package:titan_timer_control/view/widgets/control/reps_display.dart';
 
 class ControlCard extends StatelessWidget {
-  final String controlState;
-  ControlCard({this.controlState});
-
   @override
   Widget build(BuildContext context) {
     final routine = Provider.of<Routine>(context);
@@ -44,7 +41,7 @@ class ControlCard extends StatelessWidget {
                     RepsDisplay(name: "set", value: routine.sets),
                 ],
               ),
-              ControlButtons(controlState: controlState),
+              ControlButtons(),
             ],
           ),
         ),

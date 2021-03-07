@@ -4,24 +4,22 @@ import 'package:titan_timer_control/bluetooth/bluetooth.dart';
 import 'package:titan_timer_control/model/routine.dart';
 
 class ControlButtons extends StatelessWidget {
-  final String controlState;
-  ControlButtons({this.controlState});
-
   @override
   Widget build(BuildContext context) {
     final cronometroBT = Provider.of<CronometroBluetooth>(context);
     final routine = Provider.of<Routine>(context);
+    final _timerState = cronometroBT.timerState;
 
-    final _playIcon = controlState == "started" || controlState == "resumed"
+    final _playIcon = _timerState == "started" || _timerState == "resumed"
         ? Icon(Icons.pause)
         : Icon(Icons.play_arrow);
 
     _handlePlayPause() {
-      if (controlState == "stopped")
+      if (_timerState == "stopped")
         cronometroBT.sendLoadRoutine(routine.settings);
-      else if (controlState == "paused")
+      else if (_timerState == "paused")
         cronometroBT.sendResume();
-      else if (controlState == "started" || controlState == "resumed")
+      else if (_timerState == "started" || _timerState == "resumed")
         cronometroBT.sendPause();
     }
 
