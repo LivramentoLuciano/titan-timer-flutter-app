@@ -49,9 +49,19 @@ class CronometroBluetooth with ChangeNotifier {
   BluetoothDeviceState state; // Estado de conexion al target
   StreamSubscription<List<int>> notifySubscription; // Recepcion de mensajes
 
+  String _timerState;
+
   CronometroBluetooth()
       : flutterBlue = FlutterBlue.instance,
-        targetDevicesList = [];
+        targetDevicesList = [],
+        _timerState = "stopped";
+
+  String get timerState => _timerState;
+  set timerState(String s) {
+    _timerState = s;
+    print("timerState seteado : $_timerState");
+    notifyListeners();
+  }
 
   Future<String> sendLoadRoutine(List<dynamic> _datos) async {
     String _header = LOAD_ROUTINE_HEADER;
@@ -199,7 +209,7 @@ class CronometroBluetooth with ChangeNotifier {
 
   // Comienza a 'escuchar', recepcion de mensajes
   startNotifySubscription(
-      Function processCommand, Function callbackSetControlState) async {
+      Function processCommand) async {
     await targetCharacteristics.setNotifyValue(true);
 
     print("Inicio notify Subscription");
@@ -208,7 +218,7 @@ class CronometroBluetooth with ChangeNotifier {
       final _trama = getTrama(_data);
       print("Data recibida: $_data");
 
-      if (_trama != null) processCommand(_trama, callbackSetControlState);
+      if (_trama != null) processCommand(_trama);
     });
   }
 
@@ -228,7 +238,7 @@ class CronometroBluetooth with ChangeNotifier {
     return _trama;
   }
 
-  void processCommand(String _trama, Function setControlState) {
+  void processCommand(String _trama) {
     final List<String> _tramaValues = _trama.split(TRAMA_SEP);
 
     final String _header = _tramaValues[0]; // obtengo el Header
@@ -241,17 +251,19 @@ class CronometroBluetooth with ChangeNotifier {
       if (_cmd == LOAD_ROUTINE_HEADER)
         sendStart();
       else if (_cmd == START_HEADER)
-        setControlState("started");
+        timerState = "started";
       else if (_cmd == PAUSE_HEADER)
-        setControlState("paused");
+        timerState = "paused";
       else if (_cmd == RESUME_HEADER)
-        setControlState("resumed");
+        timerState = "resumed";
       else if (_cmd == ROUND_UP_HEADER)
-        setControlState("paused");
-      else if (_cmd == ROUND_DOWN_HEADER) setControlState("paused");
-    } else if (_header == TIMER_STATE_HEADER)
-      setControlState(stateCharToString[_cmd]);
-    else if (_header == FINISHED_HEADER) setControlState("stopped");
+        timerState = "paused";
+      else if (_cmd == ROUND_DOWN_HEADER) timerState = "paused";
+    } else if (_header == TIMER_STATE_HEADER) {
+      print(
+          "Recibi el 'state' actual: ${stateCharToString[_cmd]} -> Lo actualizo...");
+      timerState = stateCharToString[_cmd];
+    } else if (_header == FINISHED_HEADER) timerState = "stopped";
   }
 
   int get targetsAvailable => targetDevicesList.length;
