@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:titan_timer_control/bluetooth/bluetooth.dart';
 import 'package:titan_timer_control/constants.dart';
 import 'package:titan_timer_control/model/routine.dart';
 import 'package:titan_timer_control/view/widgets/routine_settings/reps_settings.dart';
@@ -37,7 +38,7 @@ class RoutineSettingsScreen extends StatelessWidget {
               child: FlatButton(
                 onPressed: () => Navigator.of(context)
                     .pushNamed(CONTROL_ROUTE)
-                    .then((_) => routine.state = RoutineState.STOPPED), // parche feo
+                    .then((_) => Provider.of<CronometroBluetooth>(context, listen: false).timerState = "stopped"), // parche feo
                 child: Text("Confirmar", style: TextStyle(fontSize: 18)),
               ),
             )

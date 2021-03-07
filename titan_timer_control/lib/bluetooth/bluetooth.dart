@@ -208,8 +208,7 @@ class CronometroBluetooth with ChangeNotifier {
       (stateSubscription != null) ? stateSubscription.cancel() : null;
 
   // Comienza a 'escuchar', recepcion de mensajes
-  startNotifySubscription(
-      Function processCommand) async {
+  startNotifySubscription() async {
     await targetCharacteristics.setNotifyValue(true);
 
     print("Inicio notify Subscription");

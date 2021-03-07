@@ -5,8 +5,7 @@ import 'package:titan_timer_control/view/widgets/bluetooth/devices_list.dart';
 
 class SearchBluetooth extends StatelessWidget {
   final Function startNotifySubscription;
-  final Function callbackProcessCommand;
-  SearchBluetooth({this.startNotifySubscription, this.callbackProcessCommand});
+  SearchBluetooth({this.startNotifySubscription});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +20,11 @@ class SearchBluetooth extends StatelessWidget {
       ).then((result) {
         print(result); // la salida del dialogo
         if (result == "conectado") {
-          startNotifySubscription(_cronometroBT, callbackProcessCommand);
+          startNotifySubscription();
         }
       });
     }
 
-    return IconButton(
-      icon: Icon(Icons.bluetooth),
-      onPressed: _showDevices,
-    );
+    return IconButton(icon: Icon(Icons.bluetooth), onPressed: _showDevices);
   }
 }
