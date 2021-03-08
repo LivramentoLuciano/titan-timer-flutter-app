@@ -61,10 +61,7 @@ class _ControlScreenState extends State<ControlScreen>
       body: Stack(
         children: [
           BackgroundVideo(),
-          Align(
-            child: ControlCard(),
-            alignment: Alignment.bottomCenter,
-          ),
+          Align(child: ControlCard(), alignment: Alignment.bottomCenter),
         ],
       ),
     );

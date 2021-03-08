@@ -9,11 +9,11 @@ class SearchBluetooth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _cronometroBT = Provider.of<CronometroBluetooth>(context);
     _showDevices() {
       showDialog(
         context: context,
         builder: (context) {
+          final _cronometroBT = Provider.of<CronometroBluetooth>(context);
           _cronometroBT.btScan();
           return DevicesListDialog(cronometroBT: _cronometroBT);
         },

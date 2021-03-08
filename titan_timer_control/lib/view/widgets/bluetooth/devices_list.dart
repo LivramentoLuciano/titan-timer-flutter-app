@@ -34,7 +34,7 @@ class _DevicesListDialogState extends State<DevicesListDialog> {
     }
 
     return AlertDialog(
-      title: Text("Elije un Cronómetro"),
+      title: Text("Elige un Cronómetro"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -73,7 +73,7 @@ class _DevicesListDialogState extends State<DevicesListDialog> {
         ],
       ),
       actions: [
-        FlatButton(
+        TextButton(
             onPressed: () {
               print("MANDA A PARAR SCAN FROM CANCEL");
               widget.cronometroBT.stopScan();
