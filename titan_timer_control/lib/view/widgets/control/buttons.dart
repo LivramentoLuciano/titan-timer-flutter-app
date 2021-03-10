@@ -14,6 +14,18 @@ class ControlButtons extends StatelessWidget {
         ? Icon(Icons.pause)
         : Icon(Icons.play_arrow);
 
+    final Icon _secondsReplayIcon = routine.deltaSeconds == 30
+        ? Icon(Icons.replay_30, size: 30, color: Colors.black)
+        : routine.deltaSeconds == 5
+            ? Icon(Icons.replay_5, size: 30, color: Colors.black)
+            : Icon(Icons.replay_5, size: 30);
+
+    final Icon _secondsForwardIcon = routine.deltaSeconds == 30
+        ? Icon(Icons.forward_30, size: 30, color: Colors.black)
+        : routine.deltaSeconds == 5
+            ? Icon(Icons.forward_5, size: 30, color: Colors.black)
+            : Icon(Icons.forward_5, size: 30);
+
     _handlePlayPause() {
       if (_timerState == "stopped")
         cronometroBT.sendLoadRoutine(routine.settings);
@@ -27,8 +39,9 @@ class ControlButtons extends StatelessWidget {
     // si tuviera timer y round/set actual, deberia actualizarlos aca
     _handleRoundDown() => cronometroBT.sendRoundDown();
     _handleRoundUp() => cronometroBT.sendRoundUp();
-    _handleReplay() => cronometroBT.sendReplay();
-    _handleForward() => cronometroBT.sendForward();
+
+    _handleReplay() => cronometroBT.sendReplay(routine);
+    _handleForward() => cronometroBT.sendForward(routine);
 
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
@@ -38,23 +51,23 @@ class ControlButtons extends StatelessWidget {
             alignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              FlatButton(
+              TextButton(
                 onPressed: _handleRoundDown,
                 child: Icon(Icons.fast_rewind, color: Colors.black, size: 30),
               ),
-              FlatButton(
-                onPressed: _handleReplay,
-                child: Icon(Icons.replay_10, color: Colors.black, size: 30),
+              TextButton(
+                onPressed: routine.tWork > 40 ? _handleReplay : null,
+                child: _secondsReplayIcon,
               ),
               FloatingActionButton(
                 onPressed: _handlePlayPause,
                 child: _playIcon,
               ),
-              FlatButton(
-                onPressed: _handleForward,
-                child: Icon(Icons.forward_10, color: Colors.black, size: 30),
+              TextButton(
+                onPressed: routine.tWork > 40 ? _handleForward : null,
+                child: _secondsForwardIcon,
               ),
-              FlatButton(
+              TextButton(
                 onPressed: _handleRoundUp,
                 child: Icon(Icons.fast_forward, color: Colors.black, size: 30),
               )

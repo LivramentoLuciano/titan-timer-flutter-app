@@ -57,13 +57,22 @@ class Routine with ChangeNotifier {
   }
 
   List<dynamic> get settings => [
-    mode,
-    tWork,
-    tRest,
-    tRestSets,
-    rounds,
-    sets,
-  ];
+        mode,
+        tWork,
+        tRest,
+        tRestSets,
+        rounds,
+        sets,
+      ];
+
+  // SecondsBack/Forward, segun tiempo de trabajo total
+  // Rutinas de menos de 40S, se bloqueara el boton directamente (no se usa)
+  // En instancias de descanso, lo resolvere en el micro
+  num get deltaSeconds => tWork >= 180
+      ? 30
+      : tWork >= 40
+          ? 5
+          : 0;
 
   // reemplaza a lo que deberia hacer un constructor tipo Routine.AMRAP, etc
   void defaults(String mode) {

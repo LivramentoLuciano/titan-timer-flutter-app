@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:convert' show utf8;
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_timer_control/bluetooth/bluetooth.dart';

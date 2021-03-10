@@ -7,6 +7,7 @@ import 'dart:convert' show utf8;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:titan_timer_control/model/routine.dart';
 
 // Constants
 final String SERVICE_UUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
@@ -104,16 +105,16 @@ class CronometroBluetooth with ChangeNotifier {
     return _result;
   }
 
-  Future<String> sendReplay() async {
+  Future<String> sendReplay(Routine _routine) async {
     String _header = REPLAY_HEADER;
-    List<String> _datos = [];
+    List<dynamic> _datos = [_routine.deltaSeconds];
     final _result = await _sendData(_header, _datos);
     return _result;
   }
 
-  Future<String> sendForward() async {
+  Future<String> sendForward(Routine _routine) async {
     String _header = FORWARD_HEADER;
-    List<String> _datos = [];
+    List<dynamic> _datos = [_routine.deltaSeconds];
     final _result = await _sendData(_header, _datos);
     return _result;
   }
