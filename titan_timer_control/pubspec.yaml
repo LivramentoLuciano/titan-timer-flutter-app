@@ -53,10 +53,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/videos/gym_video4.mp4
-    - local-files/img_gym.jpg
-    - local-files/img_gym2.jpg
-    - local-files/img_gym4.jpg
-    - local-files/img_box.jpg
+    - assets/img_gym.jpg
+    - assets/img_gym2.jpg
+    - assets/img_gym4.jpg
+    - assets/img_box.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
