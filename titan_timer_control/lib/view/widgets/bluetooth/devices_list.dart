@@ -63,7 +63,7 @@ class _DevicesListDialogState extends State<DevicesListDialog> {
                     .map((targetDevice) => DeviceChoice(device: targetDevice))
                     .toList();
                 return ListTile(
-                  title: Text(_deviceChoiceList[index].device.name + " - ABCD"),
+                  title: Text(_deviceChoiceList[index].device.name),
                   onTap: () => _handleSelected(_deviceChoiceList[index]),
                 );
               },

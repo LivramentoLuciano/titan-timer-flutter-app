@@ -103,7 +103,7 @@ class Routine with ChangeNotifier {
       max_tRest = 60;
       max_tRestSets = 300;
       min_tWork = 5;
-      min_tRest = 0;
+      min_tRest = 3;
       min_tRestSets = 10;
       state = RoutineState.STOPPED;
     } else if (mode == "tabata") {
@@ -118,7 +118,7 @@ class Routine with ChangeNotifier {
       max_tRest = 120;
       max_tRestSets = 180;
       min_tWork = 5;
-      min_tRest = 0;
+      min_tRest = 3;
       min_tRestSets = 10;
       state = RoutineState.STOPPED;
     } else if (mode == "combate") {
