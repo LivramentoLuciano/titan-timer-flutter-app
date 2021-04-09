@@ -26,6 +26,12 @@ class ControlButtons extends StatelessWidget {
             ? Icon(Icons.forward_5, size: 30, color: Colors.black)
             : Icon(Icons.forward_5, size: 30);
 
+    final Icon _roundDownIcon =
+        Icon(Icons.fast_rewind, color: Colors.black, size: 30);
+
+    final Icon _roundUpIcon =
+        Icon(Icons.fast_forward, color: Colors.black, size: 30);
+
     _handlePlayPause() {
       if (_timerState == "stopped")
         cronometroBT.sendLoadRoutine(routine.settings);
@@ -43,36 +49,37 @@ class ControlButtons extends StatelessWidget {
     _handleReplay() => cronometroBT.sendReplay(routine);
     _handleForward() => cronometroBT.sendForward(routine);
 
+    // Boton personalizado -> InkWell + Padding 
+    // Correcta UI incluso en Celu xs
+    Widget ControlButton({Function handler, Icon icon}) {
+      return (handler == _handleRoundDown || handler == _handleRoundUp)
+          ? InkWell(
+              onTap: handler,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: icon,
+              ),
+            )
+          : InkWell(
+              onTap: routine.tWork > 40 ? handler : null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: icon,
+              ),
+            );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              TextButton(
-                onPressed: _handleRoundDown,
-                child: Icon(Icons.fast_rewind, color: Colors.black, size: 30),
-              ),
-              TextButton(
-                onPressed: routine.tWork > 40 ? _handleReplay : null,
-                child: _secondsReplayIcon,
-              ),
-              FloatingActionButton(
-                onPressed: _handlePlayPause,
-                child: _playIcon,
-              ),
-              TextButton(
-                onPressed: routine.tWork > 40 ? _handleForward : null,
-                child: _secondsForwardIcon,
-              ),
-              TextButton(
-                onPressed: _handleRoundUp,
-                child: Icon(Icons.fast_forward, color: Colors.black, size: 30),
-              )
-            ],
-          ),
+          ControlButton(handler: _handleRoundDown, icon: _roundDownIcon),
+          ControlButton(handler: _handleReplay, icon: _secondsReplayIcon),
+          FloatingActionButton(onPressed: _handlePlayPause, child: _playIcon),
+          ControlButton(handler: _handleForward, icon: _secondsForwardIcon),
+          ControlButton(handler: _handleRoundUp, icon: _roundUpIcon)
         ],
       ),
     );
