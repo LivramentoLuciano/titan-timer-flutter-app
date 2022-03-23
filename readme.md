@@ -12,16 +12,18 @@ La funcionalidad principal de esta app es la de **permitir la configuración de 
 
 ## Screenshots
 Menú  principal
+<!-- ![Home Menu](https://github.com/LivramentoLuciano/titan-timer-flutter-app/blob/master/screenshots/Home_Menu.jpg?raw=true =250x) -->
+<img src="screenshots/Home_Menu.jpg" alt="Menú Principal" width="200"/>
 
-![Home Menu](https://github.com/LivramentoLuciano/titan-timer-flutter-app.git/screenshots/Home_Menu.jpg)
 
 Configuración de la rutina
 
-![Routine Configuration](https://github.com/LivramentoLuciano/titan-timer-flutter-app.git/screenshots/Routine_Configuration.jpg)
+<img src="screenshots/Routine_Configuration.jpg" alt="Configuración Rutina" width="200"/>
 
 Control bluetooth
 
-![Home Menu](https://github.com/LivramentoLuciano/titan-timer-flutter-app.git/screenshots/Routine_Playing.jpg)
+<img src="screenshots/Routine_Playing.jpg" alt="Control Bluetooth" width="200"/>
+
 
 ## ToDo's
 Cabe mencionar que no logré hacer funcionar en segundo plano al 'timer' de Flutter (por tanto si el teléfono se bloquea o se deja inactiva la app por un tiempo, dejará de funcionar el temporizador), por esta razón se realizó la versión *control*, queda analizar, en un futuro, realizar una versión *full* 
