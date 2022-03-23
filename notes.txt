@@ -1,0 +1,22 @@
+/********************************* UPDATE ************************************/
+Después de haber hecho un montón hasta V5 del apk (Explicado en Docummentation), concluí probando la app
+que en background (dsp de cierto tiempo fuera de la app, mata todos los procesos) no va a correr el timer (ni aunque use Isolate)
+Opciones:
+	- Se puede correr cosas en background, pero es muy complicado
+	  https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124
+
+- Lo otro que se me ocurre es que podría cambiar la APP para que no necesite correr en background
+  	Una forma podría ser directamente que la APP no corra el timer que sólo sea reemplazo del control remoto, permitiendo
+	PAUSE, START, RESUME, STOP, INCREMENT/DECREMENT ROUND & SET, +/- SEGUNDOS, etc
+	Además de permitir configurar la rutina de una manera mucho más amigable que con un 'control remoto', esto es, con las páginas
+	de configuración ya utilizadas.
+	DESVENTAJAS de hacer esto:
+		- la app no va a seguir el estado de la rutina (tiempo, y rounds/set actual) pero si tenemos
+		  en cuenta que inicialmente la idea era simplemente reemplazar el control remoto, digamos que estaba demás (estaba bueno, pero no era la idea inicial, lo hice de emoción)
+		- Además, si el Cronómetro se apagara, perdería el registro del estado de la rutina
+		  (que con la app lo recuperaba con la resincronización) pero, por otro lado, en realidad, eso de apagarse no debería
+		  pasa, osea sería una situación muy particular y que, de última debería ver qué hacer, como por ejemplo, directamente
+		  estar atentos al reloj y si vemos que se apaga, manualmente llevarlo al estado deseado (timeLeft, round, set y demás) (y el micro podría conservar el último estado en EEPROM)
+		  (el problema está en si nadie vió cuando se apagó el reloj y no sabemos cuánto tiempo estuvo apagado y cuál debería ser su estado actual)
+
+
